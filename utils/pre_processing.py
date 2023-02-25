@@ -11,7 +11,7 @@ from nltk import pos_tag
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 import pandas as pd
-import seaborn as sns
+from textblob import TextBlob
 import re
 import urlextract
 from sklearn.metrics import classification_report
@@ -131,6 +131,12 @@ class Preprocessor:
         data['normalized_tokens'] = data['tokens'].apply(self.normalize)
         data['stemmed_tokens'] = data['normalized_tokens'].apply(self.stem_or_lemmatize)
         X = data['stemmed_tokens']
-        y = data['sentiment']
+        sentiments = []
+        blob = TextBlob(X)
+        sentiment = blob.sentiment.polarity
+        sentiments.append(sentiment)
+        df = pd.DataFrame({'sentiment': sentiments})
+        data["polarity"] = df
+        y = data['polarity']
         X, y = self.select_features(X, y)
         return X, y
