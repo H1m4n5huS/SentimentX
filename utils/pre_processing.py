@@ -82,7 +82,7 @@ class Preprocessor:
         return tokens
 
     # Step 4: Normalization
-    def normalize(self, tokens):
+    def normalize(self, tokens) -> list:
         lemmatizer = WordNetLemmatizer()
         stopwords_list = stopwords.words('english')
         normalized_tokens = []
@@ -93,7 +93,7 @@ class Preprocessor:
         return normalized_tokens
 
     # Step 5: Stemming/Lemmatization
-    def stem_or_lemmatize(self, tokens):
+    def stem_or_lemmatize(self, tokens) -> list:
         lemmatizer = WordNetLemmatizer()
         stemmed_tokens = []
         for token in tokens:
@@ -122,7 +122,9 @@ class Preprocessor:
     # Single Function to preprocess data (calls internal Class methods)
 
     # Have to be modified for different sources , but different class objects can be created, hence modification might not be needed.
-    def preprocess_data(self, data):
+
+    # step to preprocess data automatically when the instance is called.
+    def __call__(self, data):
         data['Comments'] = data['Comments'].apply(self.clean_text)
         data["Comments"] = data["Comments"].apply(self.remove_emoticons)
         data['tokens'] = data['Comments'].apply(self.tokenize)
