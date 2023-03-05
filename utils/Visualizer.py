@@ -24,6 +24,9 @@ class PostProcessor:
 
     @data.setter
     def data(self, value):
+        """
+         Setter function which checks for the polarity column
+         """
         if not value["polarity"]:
             raise Exception("No Polarity column in the provided data")
         elif len(value["polarity"]) != 0:
