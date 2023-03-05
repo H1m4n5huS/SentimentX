@@ -5,5 +5,6 @@
 from .ScrapeData import *
 from .pre_processing import *
 from .Visualizer import *
+# from .Processor import *
 
-
+"Package for sentiment analysis"
