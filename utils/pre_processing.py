@@ -92,8 +92,8 @@ class Preprocessor:
                 normalized_tokens.append(normalized_token)
         return normalized_tokens
 
-    # Step 5: Stemming/Lemmatization
-    def stem_or_lemmatize(self, tokens) -> list:
+    # Step 5: Lemmatization
+    def lemmatize(self, tokens) -> list:
         lemmatizer = WordNetLemmatizer()
         stemmed_tokens = []
         for token in tokens:
