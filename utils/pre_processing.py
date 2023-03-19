@@ -37,10 +37,11 @@ class Preprocessor:
         :param text: Individual comment in the data
         :return: cleaned comments
         """
-        text = text.lower()
+        text = text.lower() # converting to lowercase
         text = nltk.re.sub(r'\d+', '', text)  # remove digits
         text = nltk.re.sub(r'[^\w\s]', '', text)  # remove punctuation
         text = nltk.re.sub(r'http?\S+', ' ', text)  # remove extra spaces and url
+        text = nltk.re.sub(r'https?\S+', ' ', text)  # remove secured urls
         return text
 
     # Step 2: Tokenization
