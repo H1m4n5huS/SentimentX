@@ -1,4 +1,6 @@
 # import tweepy as tw
+import os
+
 import streamlit as st
 import pandas as pd
 import transformers
@@ -18,18 +20,20 @@ start_date = datetime.datetime(2019, 1, 13)
 end_date = datetime.datetime(2019, 1, 31)
 hashtag = "#boycottgillette"
 
-# Create a file to store the tweets
-# with open(f"{hashtag}.csv", "w", newline="", encoding="utf-8") as f:
-#     writer = csv.writer(f)
-#     writer.writerow(["id", "content", "date"])
-
 
 def run():
-    with st.form(key='Enter name'):
+    with st.form(key='Hashtag Entry'):
         try:
             hashtag = st.text_input('Enter the hashtag for which sentiment is to be analysed')
             no_of_tweets = st.number_input('Enter the number of latest tweets for which you want to know the sentiment (maximum 50 tweets)', 0, 50, 10)
             submit_button = st.form_submit_button(label='Submit')
+            st.text("Or")
+            datasets_dir = os.path.join(os.getcwd(), "../datasets")
+            file_list = os.listdir(datasets_dir)
+            file_list.insert(0, None)
+            # Create a dropdown menu of file names
+            selected_file = st.selectbox("select an existing dataset: ", file_list, index=0)
+            submit_button_existing_dataset = st.form_submit_button(label='Analyse')
             if submit_button:
                 count = 0
                 df = pd.DataFrame(columns=["id", "Comment"])
@@ -38,6 +42,13 @@ def run():
                     if count<=no_of_tweets:
                         print(tweet.content)
                     # print(df)
+            elif submit_button_existing_dataset:
+                if selected_file is not None:
+
+                    st.write("analysing the dataset....")
+                else:
+                    st.write("Select an existing dataset")
+                # st.write(selected_file)
         except Exception as e:
             print(e)
 

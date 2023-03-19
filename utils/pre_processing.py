@@ -4,6 +4,9 @@
 # Importing only MIT or Apache 2.0 licensed packages
 
 import nltk
+import re
+import streamlit as st
+import urlextract
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
@@ -12,8 +15,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 import pandas as pd
 from textblob import TextBlob
-import re
-import urlextract
+from tqdm import tqdm
 from sklearn.metrics import classification_report
 
 
@@ -68,13 +70,16 @@ class Preprocessor:
         return normalized_tokens
 
     # Step 4: Feature selection
-    @staticmethod
-    def select_features(self, x):
-        x_tfidf = TfidfVectorizer()
-        return x_tfidf
+    # @staticmethod
+    # def select_features(self, x):
+    #     x_tfidf = TfidfVectorizer()
+    #     return x_tfidf
 
     def preprocess(self):
         data = self.data
+        # use tqdm to track progress
+        tqdm.pandas()
+        progress_bar = st.progress(0)
         data['Comments'] = data['Comments'].apply(self.clean_text)
         data['tokens'] = data['Comments'].apply(self.tokenize)
         data['lemmatized_tokens'] = data['tokens'].apply(self.lemmatize)
@@ -84,7 +89,7 @@ class Preprocessor:
         sentiment = blob.sentiment.polarity
         sentiments.append(sentiment)
         df = pd.DataFrame({'sentiment': sentiments})
-        data["polarity"] = df
+        self.data["polarity"] = df
         y = data['polarity']
-        x = self.select_features(x)
-        return x, y
+        # x = self.select_features(x)
+        st.write(self.data.polarity)

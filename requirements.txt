@@ -1,0 +1,13 @@
+snscrape~=0.6.0.20230303
+seaborn~=0.12.2
+matplotlib~=3.7.0
+wordcloud~=1.8.2.2
+ipython~=8.10.0
+nltk~=3.8.1
+urlextract~=1.8.0
+pandas~=1.5.3
+scikit-learn~=1.2.1
+textblob~=0.17.1
+tqdm~=4.64.1
+streamlit~=1.19.0
+transformers~=4.26.1
