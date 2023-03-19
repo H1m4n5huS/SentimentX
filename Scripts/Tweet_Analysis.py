@@ -1,5 +1,6 @@
 # import tweepy as tw
 import os
+import sys
 
 import streamlit as st
 import pandas as pd
@@ -54,4 +55,5 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    sys.argv = ["streamlit", "run", "Tweet_Analysis.py"]
+
