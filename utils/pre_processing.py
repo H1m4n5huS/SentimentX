@@ -5,6 +5,7 @@
 
 import nltk
 import re
+import unicodedata
 import streamlit as st
 import urlextract
 from nltk.corpus import stopwords
@@ -39,7 +40,7 @@ class Preprocessor:
         :param text: Individual comment in the data
         :return: cleaned comments
         """
-        text = text.lower() # converting to lowercase
+        text = text.lower()  # converting to lowercase
         text = nltk.re.sub(r'\d+', '', text)  # remove digits
         text = nltk.re.sub(r'[^\w\s]', '', text)  # remove punctuation
         text = nltk.re.sub(r'http?\S+', ' ', text)  # remove extra spaces and url
@@ -69,18 +70,21 @@ class Preprocessor:
                 normalized_tokens.append(normalized_token)
         return normalized_tokens
 
-    # Step 4: Feature selection
-    # @staticmethod
-    # def select_features(self, x):
-    #     x_tfidf = TfidfVectorizer()
-    #     return x_tfidf
+    # Step 4:
+    def remove_non_ascii(self, tokens: list):
+        """Remove non-ASCII characters from list of tokenized words"""
+        new_words = []
+        for token in tokens:
+            new_word = unicodedata.normalize('NFKD', token).encode('ascii', 'ignore').decode('utf-8', 'ignore')
+            new_words.append(new_word)
+        return new_words
 
-    def preprocess(self):
+    def preprocess(self, data):
         data = self.data
         # use tqdm to track progress
         tqdm.pandas()
         progress_bar = st.progress(0)
-        data['Comments'] = data['Comments'].apply(self.clean_text)
+        data['Comments'] = data['Comments'].progress_apply(self.clean_text)
         data['tokens'] = data['Comments'].apply(self.tokenize)
         data['lemmatized_tokens'] = data['tokens'].apply(self.lemmatize)
         x = data['lemmatized_tokens']
@@ -89,7 +93,8 @@ class Preprocessor:
         sentiment = blob.sentiment.polarity
         sentiments.append(sentiment)
         df = pd.DataFrame({'sentiment': sentiments})
-        self.data["polarity"] = df
+        # self.data["polarity"] = df
         y = data['polarity']
         # x = self.select_features(x)
-        st.write(self.data.polarity)
+        # st.write(self.data.polarity)
+        print(y)
