@@ -17,7 +17,7 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 from textblob import TextBlob
 from tqdm import tqdm
-from sklearn.metrics import classification_report
+from transformers import pipeline
 
 
 class Preprocessor:
@@ -30,7 +30,7 @@ class Preprocessor:
     """
 
     # Defining a constructor for the class
-    def __init__(self, data: pd.dataframe):
+    def __init__(self, data: pd.DataFrame):
         self.data = data
 
     # Step 1: Text cleaning
@@ -98,3 +98,13 @@ class Preprocessor:
         # x = self.select_features(x)
         # st.write(self.data.polarity)
         print(y)
+
+
+class SentimentAnalyser:
+    def __init__(self, user_input):
+        if type(user_input) is str:
+            specific_model = pipeline('sentiment-analysis')
+            # specific_model = pipeline(model="finiteautomata/bertweet-base-sentiment-analysis")
+            sentiment = specific_model(user_input)
+            print(sentiment[0])
+            st.text(sentiment)

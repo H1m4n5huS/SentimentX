@@ -10,4 +10,7 @@ scikit-learn~=1.2.1
 textblob~=0.17.1
 tqdm~=4.64.1
 streamlit~=1.19.0
+streamlit-metrics==0.1.0
+Pillow~=9.4.0
 transformers~=4.26.1
+
