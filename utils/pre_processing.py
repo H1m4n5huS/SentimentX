@@ -7,6 +7,7 @@ import nltk
 import re
 import unicodedata
 import streamlit as st
+import pandas as pd
 import urlextract
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -14,7 +15,6 @@ from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
-import pandas as pd
 from textblob import TextBlob
 from tqdm import tqdm
 from transformers import pipeline
@@ -102,9 +102,16 @@ class Preprocessor:
 
 class SentimentAnalyser:
     def __init__(self, user_input):
-        if type(user_input) is str:
-            specific_model = pipeline('sentiment-analysis')
+        self.user_input = user_input
+
+    def analyse(self):
+        if type(self.user_input) is str:
+            specific_model = pipeline('sentiment-analysis',  model="nlptown/bert-base-multilingual-uncased-sentiment")
+            # specific_model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
             # specific_model = pipeline(model="finiteautomata/bertweet-base-sentiment-analysis")
-            sentiment = specific_model(user_input)
+
+            sentiment = specific_model(self.user_input)
             print(sentiment[0])
+            print('kpjja')
+            print(sentiment)
             st.text(sentiment)

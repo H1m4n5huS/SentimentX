@@ -43,19 +43,19 @@ with st.form(key ='form_1'):
         submitted1 = st.form_submit_button(label='Analyse tweets ')
 
 
-# Loading message for users
-with st.spinner('Loading IPBA 13 Sentiment analyser...'):
-    time.sleep(2)
-    # Keyword or hashtag
-    if submitted1:
-        st.success('🎈Done! You searched for the last ' + str(num_of_tweets) + ' tweets that used #' + hashtag)
-
-
-image = img.open('../images/positive_smiley.jpg')
-st.text("Positive \t Neutral \t Negative ")
-image1 = img.open('../images/Neutral.jpg')
-image2 = img.open('../images/Negative.jpg')
-st.image([image, image1, image2], width=120)
+# # Loading message for users
+# with st.spinner('Loading IPBA 13 Sentiment analyser...'):
+#     time.sleep(2)
+#     # Keyword or hashtag
+#     if submitted1:
+#         st.success('🎈Done! You searched for the last ' + str(num_of_tweets) + ' tweets that used #' + hashtag)
+#
+#
+# image = img.open('../images/positive_smiley.jpg')
+# st.text("Positive \t Neutral \t Negative ")
+# image1 = img.open('../images/Neutral.jpg')
+# image2 = img.open('../images/Negative.jpg')
+# st.image([image, image1, image2], width=120)
 
 
 # metric_row(
@@ -67,7 +67,7 @@ st.image([image, image1, image2], width=120)
 # )
 
 
-with st.form(key='Hashtag Entry'):
+# with st.form(key='Analyse_form'):
     try:
         sentence = st.text_input('Enter a sentence to analyse the sentiment')
         # no_of_tweets = st.number_input('Enter the number of latest tweets for which you want to know the sentiment (maximum 50 tweets)', 0, 50, 10)
@@ -81,11 +81,10 @@ with st.form(key='Hashtag Entry'):
         submit_button_existing_dataset = st.form_submit_button(label='Analyse')
         if submit_button:
             analyse_sentence = SentimentAnalyser(sentence)
-
+            analyse_sentence.analyse()
             # count = 0
             # df = pd.DataFrame(columns=["id", "Comment"])
             # Use snscrape to search for tweets with the hashtag and within the specified date range
-
 
             # for tweet in sntwitter.TwitterSearchScraper(f'{"mahindra"} since:{start_date.date()} until:{end_date.date()} lang:en').get_items():
             #     if count<= no_of_tweets:
