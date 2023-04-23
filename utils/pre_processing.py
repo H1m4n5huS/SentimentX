@@ -106,12 +106,11 @@ class SentimentAnalyser:
 
     def analyse(self):
         if type(self.user_input) is str:
-            specific_model = pipeline('sentiment-analysis',  model="nlptown/bert-base-multilingual-uncased-sentiment")
-            # specific_model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
+            # specific_model = pipeline('sentiment-analysis',  model="nlptown/bert-base-multilingual-uncased-sentiment")
+            specific_model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
             # specific_model = pipeline(model="finiteautomata/bertweet-base-sentiment-analysis")
 
             sentiment = specific_model(self.user_input)
             print(sentiment[0])
-            print('kpjja')
             print(sentiment)
             st.text(sentiment)

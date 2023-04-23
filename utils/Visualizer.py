@@ -27,9 +27,9 @@ class PostProcessor:
         """
          Setter function which checks for the polarity column
          """
-        if not value["polarity"]:
+        if not value["score"]:
             raise Exception("No Polarity column in the provided data")
-        elif len(value["polarity"]) != 0:
+        elif len(value["score"]) != 0:
             self._sentiments = value
 
     def plot_word_cloud(self) -> None:
@@ -45,5 +45,4 @@ class PostProcessor:
         plt.axis("off")
         plt.tight_layout(pad=0)
         plt.show()
-        # Will work only in jupyter notebook.
         display(Image(filename='twitter_wordcloud.png'))
