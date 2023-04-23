@@ -9,9 +9,7 @@ import pandas as pd
 import transformers
 import csv
 import datetime
-import streamlit_metrics
 import snscrape.modules.twitter as sntwitter
-from streamlit_metrics import metric, metric_row
 from utils import *
 
 st.set_page_config(layout="wide")
@@ -20,17 +18,15 @@ col2, col3 = st.columns((2, 1))
 
 image = img.open('../images/iim_indore.jpg')  #logo
 st.image(image, width=350)  # logo width
-
-# classifier = pipeline('sentiment-analysis')
 st.title("IPBA- Batch 13")
 st.title('Sentiment Analysis')
 st.markdown("""
 <-- Search a hashtag in the sidebar to run the tweets analyzer!
 """)
 
-# Define the hashtag and date range to search for
-start_date = datetime.datetime(2019, 1, 13)
-end_date = datetime.datetime(2019, 1, 31)
+# # Define the hashtag and date range to search for
+# start_date = datetime.datetime(2019, 1, 13)
+# end_date = datetime.datetime(2019, 1, 31)
 
 st.sidebar.header('Search through twitter hashtag!') #sidebar title
 
@@ -39,9 +35,13 @@ with st.form(key ='form_1'):
     with st.sidebar:
         hashtag = st.text_input('Enter hashtag', "#India", help='Ensure hashtag does not contain spaces!')
         num_of_tweets = st.number_input('Maximum number of tweets', min_value=20, max_value=50, value=20, step=5, help='Returns the most recent tweets within the last 7 days')
-        # st.sidebar.text("") # for spacing
         submitted1 = st.form_submit_button(label='Analyse tweets ')
 
+    method_expander = st.sidebar.expander("Methodology")
+    method_expander.markdown("""
+    * Applying the [distilbert-base-uncased-finetuned-sst-2-english](https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english)
+    * Sentiments categorised under : Positive,  Neutral and Negative
+    """)
 
 # # Loading message for users
 # with st.spinner('Loading IPBA 13 Sentiment analyser...'):
@@ -76,10 +76,13 @@ with st.form(key ='form_1'):
         file_list.insert(0, None)
         # Create a dropdown menu of file names
         selected_file = st.selectbox("select an existing dataset: ", file_list, index=0)
+        count = st.number_input('Maximum number of tweets/comments to analyse', min_value=20, max_value=2000, value=20, step=5,
+                        help='Analyses the sentiment of set number of tweets/comments')
         submit_button_existing_dataset = st.form_submit_button(label='Analyse')
         if submit_button:
-            analyse_sentence = SentimentAnalyser(sentence)
-            analyse_sentence.analyse()
+            with st.spinner("Getting the sentiment of your sentence ........"):
+                analyse_sentence = SentimentAnalyser(sentence)
+                analyse_sentence.analyse()
             # count = 0
             # df = pd.DataFrame(columns=["id", "Comment"])
             # Use snscrape to search for tweets with the hashtag and within the specified date range
