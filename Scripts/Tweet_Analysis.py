@@ -51,10 +51,8 @@ with st.form(key ='form_1'):
 #         st.success('🎈Done! You searched for the last ' + str(num_of_tweets) + ' tweets that used #' + hashtag)
 #
 #
-# image = img.open('../images/positive_smiley.jpg')
-# st.text("Positive \t Neutral \t Negative ")
-# image1 = img.open('../images/Neutral.jpg')
-# image2 = img.open('../images/Negative.jpg')
+
+
 # st.image([image, image1, image2], width=120)
 
 

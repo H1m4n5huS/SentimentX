@@ -18,6 +18,8 @@ from sklearn.model_selection import train_test_split
 from textblob import TextBlob
 from tqdm import tqdm
 from transformers import pipeline
+from PIL import Image as img
+
 
 
 class Preprocessor:
@@ -106,11 +108,19 @@ class SentimentAnalyser:
 
     def analyse(self):
         if type(self.user_input) is str:
-            # specific_model = pipeline('sentiment-analysis',  model="nlptown/bert-base-multilingual-uncased-sentiment")
             specific_model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
             # specific_model = pipeline(model="finiteautomata/bertweet-base-sentiment-analysis")
-
+            st.write("Getting the sentiment of your sentence ........")
             sentiment = specific_model(self.user_input)
             print(sentiment[0])
             print(sentiment)
-            st.text(sentiment)
+            st.text(f"Sentiment :{sentiment[0]['label']}")
+            st.text(f"Score: {sentiment[0]['score']}")
+
+            image = img.open('../images/positive_smiley.jpg')
+            # st.text("Positive \t Neutral \t Negative ")
+            image1 = img.open('../images/Neutral.jpg')
+            image2 = img.open('../images/Negative.jpg')
+
+            if sentiment[0]["label"] == "POSITIVE":
+                st.image([image], width=120)
