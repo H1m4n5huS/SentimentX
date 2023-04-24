@@ -12,4 +12,5 @@ tqdm~=4.64.1
 streamlit~=1.19.0
 Pillow~=9.4.0
 transformers~=4.26.1
-
+numpy~=1.24.2
+googleapiclient
