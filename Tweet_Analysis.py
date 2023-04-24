@@ -16,7 +16,7 @@ st.set_page_config(layout="wide")
 col1 = st.sidebar
 col2, col3 = st.columns((2, 1))
 
-image = img.open('../images/iim_indore.jpg')  #logo
+image = img.open('images/iim_indore.jpg')  #logo
 st.image(image, width=350)  # logo width
 st.title("IPBA- Batch 13")
 st.title('Sentiment Analysis')
@@ -24,9 +24,19 @@ st.markdown("""
 <-- Search a hashtag in the sidebar to run the tweets analyzer!
 """)
 
-# # Define the hashtag and date range to search for
-# start_date = datetime.datetime(2019, 1, 13)
-# end_date = datetime.datetime(2019, 1, 31)
+m = st.markdown("""
+<style>
+div.stButton > button:first-child {
+    background-color: #0099ff;
+    color:#ffffff;
+     border-radius: 0.3rem;
+}
+div.stButton > button:hover {
+    background-color: #60ff10;
+    color:#f00333;
+    }
+</style>""", unsafe_allow_html=True)
+
 
 st.sidebar.header('Search through twitter hashtag!') #sidebar title
 
@@ -52,26 +62,13 @@ with st.form(key ='form_1'):
 #
 #
 
-
-# st.image([image, image1, image2], width=120)
-
-
-# metric_row(
-#     {
-#         "% 😡 Negative Tweets",
-#         "% 😑 Neutral Tweets"
-#         "% 😃 Positive Tweets"
-#     }
-# )
-
-
 # with st.form(key='Analyse_form'):
     try:
         sentence = st.text_input('Enter a sentence to analyse the sentiment')
         # no_of_tweets = st.number_input('Enter the number of latest tweets for which you want to know the sentiment (maximum 50 tweets)', 0, 50, 10)
         submit_button = st.form_submit_button(label='Submit')
         st.text("Or")
-        datasets_dir = os.path.join(os.getcwd(), "../datasets")
+        datasets_dir = os.path.join(os.getcwd(), "datasets")
         file_list = os.listdir(datasets_dir)
         file_list.insert(0, None)
         # Create a dropdown menu of file names
@@ -81,22 +78,21 @@ with st.form(key ='form_1'):
         submit_button_existing_dataset = st.form_submit_button(label='Analyse')
         if submit_button:
             with st.spinner("Getting the sentiment of your sentence ........"):
-                analyse_sentence = SentimentAnalyser(sentence)
-                analyse_sentence.analyse()
-            # count = 0
-            # df = pd.DataFrame(columns=["id", "Comment"])
-            # Use snscrape to search for tweets with the hashtag and within the specified date range
 
-            # for tweet in sntwitter.TwitterSearchScraper(f'{"mahindra"} since:{start_date.date()} until:{end_date.date()} lang:en').get_items():
-            #     if count<= no_of_tweets:
-            #         print(tweet.content)
-                # print(df)
+                if sentence:
+                    analyse_sentence = SentimentAnalyser(sentence)
+                    analyse_sentence.analyse()
+                else:
+                    st.write("Enter a sentence to get the sentiment...!")
+
         elif submit_button_existing_dataset:
             if selected_file is not None:
-
-                st.write("analysing the dataset....")
+                with st.spinner("analysing the dataset...."):
+                    analyse_dataset = SentimentAnalyser(selected_file)
+                    analyse_dataset.analyse_dataset(count)
             else:
                 st.write("Select an existing dataset")
+
             # st.write(selected_file)
     except Exception as e:
         print(e)

@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import os.path
 
 # Importing only MIT or Apache 2.0 licensed packages
 
 import nltk
 import re
+
+import numpy as np
 import unicodedata
 import streamlit as st
 import pandas as pd
@@ -19,7 +22,6 @@ from textblob import TextBlob
 from tqdm import tqdm
 from transformers import pipeline
 from PIL import Image as img
-
 
 
 class Preprocessor:
@@ -108,7 +110,8 @@ class SentimentAnalyser:
 
     def analyse(self):
         if type(self.user_input) is str:
-            specific_model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
+            # specific_model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
+            specific_model = pipeline("sentiment-analysis")
             # specific_model = pipeline(model="finiteautomata/bertweet-base-sentiment-analysis")
             sentiment = specific_model(self.user_input)
             print(sentiment)
@@ -127,5 +130,25 @@ class SentimentAnalyser:
             else:
                 st.image([image1], width=60)
 
-    def analyse_dataset(self):
-        pass
+    def analyse_dataset(self, count: int):
+        df = pd.read_csv(os.path.join(os.path.dirname(os.getcwd()), "datasets", self.user_input ))
+        df = df[["Comment"]]
+        # print(df)
+        print(df.head(count))
+        specific_model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
+        list_array = []
+        cut_df= df["Comment"].head(count)
+        for text in df["Comment"].head(count):
+            # sentiment = specific_model(Comment)
+            print(text)
+            sentiment = self.get_sentiment(text)
+            list_array.append(sentiment)
+        print(list_array)
+        cut_df["Sentiment"] = list_array
+        print(cut_df)
+
+    def get_sentiment(self, input_comment):
+        specific_model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
+        sentiment = specific_model(input_comment)
+        return sentiment[0]["label"]
+
