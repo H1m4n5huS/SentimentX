@@ -107,48 +107,47 @@ class Preprocessor:
 class SentimentAnalyser:
     def __init__(self, user_input):
         self.user_input = user_input
+        self.dataframe_placeholder = st.empty()
+        # self.model = pipeline(model="finiteautomata/bertweet-base-sentiment-analysis")
+        # self.model = pipeline("sentiment-analysis")
+        self.model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
 
     def analyse(self):
         if type(self.user_input) is str:
             # specific_model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
-            specific_model = pipeline("sentiment-analysis")
-            # specific_model = pipeline(model="finiteautomata/bertweet-base-sentiment-analysis")
-            sentiment = specific_model(self.user_input)
-            print(sentiment)
+            sentiment = self.model(self.user_input)
             st.text(f"Sentiment :{sentiment[0]['label'].capitalize()}")
             st.text(f"Score: {sentiment[0]['score']}")
+            image = img.open(os.path.join(os.getcwd(), "images","positive_smiley.jpg"))
+            image1 = img.open(os.path.join(os.getcwd(),"images","Neutral.jpg"))
+            image2 = img.open(os.path.join(os.getcwd(),"images","Negative.jpg"))
 
-            image = img.open('../images/positive_smiley.jpg')
-            # st.text("Positive \t Neutral \t Negative ")
-            image1 = img.open('../images/Neutral.jpg')
-            image2 = img.open('../images/Negative.jpg')
-
-            if sentiment[0]["label"].capitalize() == "Positive":
+            if sentiment[0]["label"].capitalize() in["POSITIVE","POS"]:
                 st.image([image], width=60)
-            elif sentiment[0]['label'] == "Negative":
+            elif sentiment[0]['label'] in ["NEGATIVE","NEG"]:
                 st.image([image2], width=60)
             else:
                 st.image([image1], width=60)
 
     def analyse_dataset(self, count: int):
-        df = pd.read_csv(os.path.join(os.path.dirname(os.getcwd()), "datasets", self.user_input ))
-        df = df[["Comment"]]
-        # print(df)
-        print(df.head(count))
-        specific_model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
-        list_array = []
-        cut_df= df["Comment"].head(count)
-        for text in df["Comment"].head(count):
-            # sentiment = specific_model(Comment)
-            print(text)
-            sentiment = self.get_sentiment(text)
-            list_array.append(sentiment)
-        print(list_array)
-        cut_df["Sentiment"] = list_array
-        print(cut_df)
+        # print(self.user_input)
+        df = pd.read_csv(self.user_input)
+        df = df["Comment"].head(count)
+        df=pd.DataFrame(df, columns=["Comment"])
+        self.dataframe_placeholder.dataframe(df)
+        df["Polarity"] =None
+        df["score"]= 0
+        for i, row in df.iterrows():
+            polarity, score = self.get_sentiment(row.Comment)
+            df["Polarity"].iloc[i] = polarity
+            df["score"].iloc[i] =score
+            self.dataframe_placeholder.dataframe(df)
+
+
+
 
     def get_sentiment(self, input_comment):
-        specific_model = pipeline(model="distilbert-base-uncased-finetuned-sst-2-english")
-        sentiment = specific_model(input_comment)
-        return sentiment[0]["label"]
+        sentiment = self.model(input_comment)
+        print(sentiment[0]["label"], sentiment[0]["score"])
+        return sentiment[0]["label"], sentiment[0]["score"]
 

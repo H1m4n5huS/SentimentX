@@ -73,7 +73,7 @@ with st.form(key ='form_1'):
         file_list.insert(0, None)
         # Create a dropdown menu of file names
         selected_file = st.selectbox("select an existing dataset: ", file_list, index=0)
-        count = st.number_input('Maximum number of tweets/comments to analyse', min_value=20, max_value=2000, value=20, step=5,
+        count = st.number_input('Maximum number of tweets/comments to analyse', min_value=10, max_value=2000, value=10, step=100,
                         help='Analyses the sentiment of set number of tweets/comments')
         submit_button_existing_dataset = st.form_submit_button(label='Analyse')
         if submit_button:
@@ -88,7 +88,7 @@ with st.form(key ='form_1'):
         elif submit_button_existing_dataset:
             if selected_file is not None:
                 with st.spinner("analysing the dataset...."):
-                    analyse_dataset = SentimentAnalyser(selected_file)
+                    analyse_dataset = SentimentAnalyser(os.path.join(os.getcwd(), "datasets", selected_file))
                     analyse_dataset.analyse_dataset(count)
             else:
                 st.write("Select an existing dataset")
