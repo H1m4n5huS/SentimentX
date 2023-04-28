@@ -22,6 +22,7 @@ from textblob import TextBlob
 from tqdm import tqdm
 from transformers import pipeline
 from PIL import Image as img
+from .Visualizer import *
 
 
 class Preprocessor:
@@ -129,25 +130,32 @@ class SentimentAnalyser:
             else:
                 st.image([image1], width=60)
 
-    def analyse_dataset(self, count: int):
-        # print(self.user_input)
-        df = pd.read_csv(self.user_input)
+    def analyse_dataset(self, count: int, df):
+        # df = pd.read_csv(self.user_input)
         df = df["Comment"].head(count)
-        df=pd.DataFrame(df, columns=["Comment"])
-        self.dataframe_placeholder.dataframe(df)
+        word_count = 0
+        df = pd.DataFrame(df, columns=["Comment"])
+        df2 = pd.DataFrame(columns=["Comment", "Polarity", "score"])
         df["Polarity"] =None
         df["score"]= 0
         for i, row in df.iterrows():
-            polarity, score = self.get_sentiment(row.Comment)
-            df["Polarity"].iloc[i] = polarity
-            df["score"].iloc[i] =score
-            self.dataframe_placeholder.dataframe(df)
-
-
-
+            with st.spinner(f"analysed {i+1} comments"):
+                polarity, score = self.get_sentiment(row.Comment)
+                df["Polarity"].iloc[i] = polarity
+                df["score"].iloc[i] = score
+                new_data = {'Comment': row.Comment, 'Polarity': polarity, 'score': score}
+                df2 = df2.append(new_data, ignore_index=True)
+                self.dataframe_placeholder.dataframe(df2, width=2500)
+                word_count += len(row.Comment.split())
+        process = PostProcessor(df["score"].loc[df['Polarity'] == "Positive"])
+        process.plot_sentiments("positive")
+        process.plot_pie_chart(df["Polarity"])
+        process1 = PostProcessor(df)
+        process1.plot_word_cloud(word_count)
 
     def get_sentiment(self, input_comment):
         sentiment = self.model(input_comment)
         print(sentiment[0]["label"], sentiment[0]["score"])
         return sentiment[0]["label"], sentiment[0]["score"]
+
 

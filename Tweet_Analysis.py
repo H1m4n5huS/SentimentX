@@ -60,7 +60,10 @@ with st.form(key ='form_1'):
 #     if submitted1:
 #         st.success('🎈Done! You searched for the last ' + str(num_of_tweets) + ' tweets that used #' + hashtag)
 #
-#
+    @st.cache_data()
+    def load_data(user_input):
+        df1 = pd.read_csv(user_input)
+        return df1
 
 # with st.form(key='Analyse_form'):
     try:
@@ -89,10 +92,15 @@ with st.form(key ='form_1'):
             if selected_file is not None:
                 with st.spinner("analysing the dataset...."):
                     analyse_dataset = SentimentAnalyser(os.path.join(os.getcwd(), "datasets", selected_file))
-                    analyse_dataset.analyse_dataset(count)
+                    df = load_data(os.path.join(os.getcwd(), "datasets", selected_file))
+                    analyse_dataset.analyse_dataset(count, df)
             else:
                 st.write("Select an existing dataset")
 
             # st.write(selected_file)
     except Exception as e:
         print(e)
+
+
+
+
