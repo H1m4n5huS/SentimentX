@@ -50,7 +50,7 @@ with st.form(key ='form_1'):
     method_expander = st.sidebar.expander("Methodology")
     method_expander.markdown("""
     * Applying the [distilbert-base-uncased-finetuned-sst-2-english](https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english)
-    * Sentiments categorised under : Positive,  Neutral and Negative
+    * Sentiments categorised under : Positive and Negative
     """)
 
 # # Loading message for users

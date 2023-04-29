@@ -9,6 +9,7 @@ class PostProcessor:
     def __init__(self, data):
         self._sentiments = data
         self.col1, self.col2, self.col3 = st.columns(3)
+        sentiment_expander = st.expander('Expand to see more sentiment analysis', expanded=False)
 
     def plot_sentiments(self, polarity):
         # """
@@ -53,12 +54,8 @@ class PostProcessor:
 
     def plot_word_cloud(self, word_count) -> None:
 
-        with self.col2:
-            # generate the wordcloud
             all_text = ' '.join(self._sentiments["Comment"])
-            wordcloud = WordCloud(width=2000, height=1800, background_color='white').generate(all_text)
-
-            # plot the wordcloud
+            wordcloud = WordCloud(width=400, height=400, background_color='white').generate(all_text)
             plt.imshow(wordcloud, interpolation='bilinear')
             plt.axis('off')
             st.pyplot()

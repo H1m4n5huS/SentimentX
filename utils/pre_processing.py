@@ -123,9 +123,9 @@ class SentimentAnalyser:
             image1 = img.open(os.path.join(os.getcwd(),"images","Neutral.jpg"))
             image2 = img.open(os.path.join(os.getcwd(),"images","Negative.jpg"))
 
-            if sentiment[0]["label"].capitalize() in["POSITIVE","POS"]:
+            if sentiment[0]["label"].capitalize() in["POSITIVE","POS", "Positive"]:
                 st.image([image], width=60)
-            elif sentiment[0]['label'] in ["NEGATIVE","NEG"]:
+            elif sentiment[0]['label'] in ["NEGATIVE","NEG", "Negative"]:
                 st.image([image2], width=60)
             else:
                 st.image([image1], width=60)
